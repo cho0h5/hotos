@@ -2,15 +2,15 @@ TARGET = disk.img
 
 all: bootloader disk.img
 
-$(TARGET): 16bit/bootloader.bin
-	cp 16bit/bootloader.bin disk.img 
-
 bootloader:
-	make -C 16bit 
+	make -C 01-bootloader 
+
+$(TARGET): 01-bootloader/bootloader.bin
+	cp 01-bootloader/bootloader.bin disk.img 
 
 run:
 	qemu-system-x86_64 -L . -boot c -m 256 -hda $(TARGET)
 
 clean:
-	make -C 16bit clean
+	make -C 01-bootloader clean
 	rm disk.img
