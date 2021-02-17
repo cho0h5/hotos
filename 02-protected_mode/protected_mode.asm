@@ -1,4 +1,4 @@
-[ORG 0x00]
+[ORG 0x10000]
 [BITS 16]
 
 SECTION .text
@@ -14,7 +14,7 @@ START:
     or al, 1
     mov cr0, eax
 
-    jmp dword 0x08:(PROTECTEDMODE - $$ + 0x10000)
+    jmp dword 0x08:PROTECTEDMODE
 
 [BITS 32]
 PROTECTEDMODE:
@@ -28,7 +28,7 @@ PROTECTEDMODE:
     mov esp, 0xFFFE
     mov ebp, 0xFFFE
 
-    push (ENTER32MESSAGE - $$ + 0x10000)
+    push ENTER32MESSAGE
     push 2
     push 0
     call PRINTMESSAGE
@@ -75,7 +75,7 @@ PRINTMESSAGE:
 
 GDTR:
     dw GDTEND - GDT - 1
-    dd GDT - $$ + 0x10000
+    dd GDT
 
 GDT:
     NULLDESCRIPTOR:
