@@ -6,36 +6,27 @@ SECTION .text
 mov ax, 0xB800
 mov es, ax
 
-mov ah, 0x07
+.PRINTMESSAGE:
+    mov ah, 0x07
+    mov si, 0
+    mov di, 0
 
-mov al, 'H'
-mov [es:0x0000], ax
-mov al, 'e'
-mov [es:0x0002], ax
-mov al, 'l'
-mov [es:0x0004], ax
-mov al, 'l'
-mov [es:0x0006], ax
-mov al, 'o'
-mov [es:0x0008], ax
-mov al, ','
-mov [es:0x000A], ax
-mov al, ' '
-mov [es:0x000C], ax
-mov al, 'w'
-mov [es:0x000E], ax
-mov al, 'o'
-mov [es:0x0010], ax
-mov al, 'r'
-mov [es:0x0012], ax
-mov al, 'l'
-mov [es:0x0014], ax
-mov al, 'd'
-mov [es:0x0016], ax
-mov al, '!'
-mov [es:0x0018], ax
+.PRINTMESSAGELOOP:
+    mov al, byte [si+MESSAGE+0x7C00]
+    mov [es:di], ax
+    add si, 1
+    add di, 2
+
+    cmp al, 0
+    je .PRINTMESSAGEEND
+
+    jmp .PRINTMESSAGELOOP
+
+.PRINTMESSAGEEND:
 
 jmp $
+
+MESSAGE: db 'Hello, world!', 0;
 
 times 510 - ($ - $$) db 0x00
 
