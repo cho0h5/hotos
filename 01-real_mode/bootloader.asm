@@ -25,10 +25,15 @@ START:
     add sp, 6
 
     ; disk load
-    mov ax, 0x1000
-    mov es, ax
+    mov ax, 0
+    mov dl, 0
+    int 0x13
+    jc DISKREADERROR1
+
+    mov si, 0x1000
+    mov es, si
     mov bx, 0x0000
-    mov di, word 1024
+    mov di, word 1
 
 .READDISKLOOP:
     cmp di, 0
@@ -36,13 +41,17 @@ START:
     sub di, 0x1
 
     mov ah, 0x02
-    mov al, 0x01
-    mov cl, [SECTOR]
-    mov dh, [HEAD]
-    mov ch, [TRACK]
+    mov al, 0x1
+    ;mov cl, byte [SECTOR]
+    ;mov dh, byte [HEAD]
+    ;mov ch, byte [TRACK]
+    mov ch, 0
+    mov cl, 2
+    mov dh, 0
     mov dl, 0x00
 
     int 0x13
+    jc DISKREADERROR2
 
     add si, 0x0020
     mov es, si
@@ -71,7 +80,7 @@ START:
     call PRINTMESSAGE
     add sp, 6
 
-jmp $
+    jmp 0x1000:0x0000
 
 ; function
 PRINTMESSAGE:
@@ -149,14 +158,32 @@ PRINTCLEAR:
 
     pop bp
     ret
+
+DISKREADERROR1:
+    push DISKERRORMESSAGE1
+    push 1
+    push 0
+    call PRINTMESSAGE
+
+    jmp $
+
+DISKREADERROR2:
+    push DISKERRORMESSAGE2
+    push 1
+    push 0
+    call PRINTMESSAGE
+
+    jmp $
     
 ; variable
-ENTER16MESSAGE: db 'ENTER REAL MODE (16bit)', 0;
-COMPLETEREADDISKMESSAGE: db 'COMPLETE READ DISK (1024 SECTOR)', 0;
+ENTER16MESSAGE: db 'ENTER REAL MODE (16bit)', 0
+DISKERRORMESSAGE1: db 'FAILED READ DISK (1)', 0
+DISKERRORMESSAGE2: db 'FAILED READ DISK (2)', 0
+COMPLETEREADDISKMESSAGE: db 'COMPLETE READ DISK (1024 SECTOR)', 0
 
-SECTOR: db 2
-HEAD: db 0
-TRACK: db 0
+SECTOR: db 0x02
+HEAD: db 0x00
+TRACK: db 0x00
 
 times 510 - ($ - $$) db 0x00
 
