@@ -33,7 +33,7 @@ START:
     mov si, 0x1000
     mov es, si
     mov bx, 0x0000
-    mov di, word 1
+    mov di, word 1024
 
 .READDISKLOOP:
     cmp di, 0
@@ -42,12 +42,9 @@ START:
 
     mov ah, 0x02
     mov al, 0x1
-    ;mov cl, byte [SECTOR]
-    ;mov dh, byte [HEAD]
-    ;mov ch, byte [TRACK]
-    mov ch, 0
-    mov cl, 2
-    mov dh, 0
+    mov cl, byte [SECTOR]
+    mov dh, byte [HEAD]
+    mov ch, byte [TRACK]
     mov dl, 0x00
 
     int 0x13

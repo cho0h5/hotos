@@ -1,6 +1,6 @@
-TARGET = protected_mode_entry.bin
+TARGET = protected_mode.bin
 
-$(TARGET): protected_mode_entry.asm
+$(TARGET): protected_mode.asm
 	nasm $^ -o $@ 
 
 clean:

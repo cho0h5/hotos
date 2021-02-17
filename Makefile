@@ -8,9 +8,9 @@ bootloader:
 protected_mode:
 	make -C 02-protected_mode 
 
-$(TARGET): 01-real_mode/bootloader.bin 02-protected_mode/protected_mode_entry.bin
+$(TARGET): 01-real_mode/bootloader.bin 02-protected_mode/protected_mode.bin
 	cat 01-real_mode/bootloader.bin >> disk.img 
-	cat 02-protected_mode/protected_mode_entry.bin >> disk.img 
+	cat 02-protected_mode/protected_mode.bin >> disk.img 
 
 run:
 	@echo -------------------- make clean --------------------
