@@ -3,8 +3,14 @@
 
 SECTION .text
 
-mov ax, 0xB800
-mov es, ax
+;jmp 0x07C0:START
+
+START:
+    mov ax, 0x07C0
+    mov ds, ax
+
+    mov ax, 0xB800
+    mov es, ax
 
 .PRINTMESSAGE:
     mov ah, 0x07
@@ -12,7 +18,7 @@ mov es, ax
     mov di, 0
 
 .PRINTMESSAGELOOP:
-    mov al, byte [si+MESSAGE+0x7C00]
+    mov al, byte [si+MESSAGE]
     mov [es:di], ax
     add si, 1
     add di, 2
