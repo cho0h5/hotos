@@ -3,22 +3,46 @@
 
 SECTION .text
 
-;jmp 0x07C0:START
+jmp 0x07C0:START
 
 START:
+    call PRINTCLEAR
+
     mov ax, 0x07C0
     mov ds, ax
+
+    push ENTER16MESSAGE
+    push 0
+    push 0
+    call PRINTMESSAGE
+    add sp, 6
+
+jmp $
+
+PRINTMESSAGE:
+    push bp
+    mov bp, sp
+
+    push es
+    push si
+    push di
+    push ax
 
     mov ax, 0xB800
     mov es, ax
 
-.PRINTMESSAGE:
+    mov ax, word [bp + 6]
+    mov si, 160
+    mul si
+    add ax, word [bp + 4]
+    add ax, word [bp + 4]
+    mov di, ax
+    mov si, word [bp + 8]
+
     mov ah, 0x07
-    mov si, 0
-    mov di, 0
 
 .PRINTMESSAGELOOP:
-    mov al, byte [si+MESSAGE]
+    mov al, byte [si]
     mov [es:di], ax
     add si, 1
     add di, 2
@@ -29,10 +53,50 @@ START:
     jmp .PRINTMESSAGELOOP
 
 .PRINTMESSAGEEND:
+    pop ax
+    pop di
+    pop si
+    pop es
 
-jmp $
+    pop bp
+    ret
 
-MESSAGE: db 'Hello, world!', 0;
+PRINTCLEAR:
+    push bp
+    mov bp, sp
+
+    push ax
+    push es
+    push di
+
+    mov ax, 0xB800
+    mov es, ax
+    
+    mov di, 0
+
+    mov ah, 0x07
+    mov al, 0x00
+
+
+.PRINTCLEARLOOP:
+    cmp di, 4000
+    je .PRINTCLEAREND
+
+    mov [es:di], ax
+    add di, 2
+    jmp .PRINTCLEARLOOP
+    
+
+.PRINTCLEAREND:
+    pop di
+    pop es
+    pop ax
+
+    pop bp
+    ret
+    
+
+ENTER16MESSAGE: db 'ENTER REAL MODE (16bit)', 0;
 
 times 510 - ($ - $$) db 0x00
 
