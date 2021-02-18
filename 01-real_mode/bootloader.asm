@@ -33,7 +33,7 @@ START:
     mov si, 0x1000
     mov es, si
     mov bx, 0x0000
-    mov di, word 1024
+    mov di, word 1
 
 .READDISKLOOP:
     cmp di, 0

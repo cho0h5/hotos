@@ -35,6 +35,7 @@ PROTECTEDMODE:
     add esp, 12
 
     jmp $
+    jmp dword 0x08:0x10200
 
 PRINTMESSAGE:
     push ebp
