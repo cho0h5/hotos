@@ -24,7 +24,7 @@ START:
     call PRINTMESSAGE
     add sp, 6
 
-    ; disk load
+READDISK:
     mov ax, 0
     mov dl, 0
     int 0x13
@@ -53,12 +53,13 @@ START:
     add si, 0x0020
     mov es, si
 
-    cmp byte [SECTOR], 18
-    jne .READDISKLOOP
-    
     mov al, byte [SECTOR]
     add al, 1
     mov byte [SECTOR], al
+
+    cmp byte [SECTOR], 19
+    jne .READDISKLOOP
+    
 
     xor byte [HEAD], 0x01
     cmp byte [HEAD], 1
