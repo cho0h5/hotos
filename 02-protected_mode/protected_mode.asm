@@ -8,6 +8,9 @@ START:
     mov ds, ax
     mov es, ax
 
+    mov ax, 0x2401
+    int 0x15
+
     cli
     lgdt [GDTR]
     mov eax, cr0
